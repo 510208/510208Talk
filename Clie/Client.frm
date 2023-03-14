@@ -1,7 +1,7 @@
 VERSION 5.00
 Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCK.OCX"
 Begin VB.Form Client 
-   Caption         =   "Form1"
+   Caption         =   "TCP_Client"
    ClientHeight    =   5130
    ClientLeft      =   120
    ClientTop       =   465
@@ -10,23 +10,29 @@ Begin VB.Form Client
    ScaleHeight     =   5130
    ScaleWidth      =   8130
    StartUpPosition =   3  '系統預設值
+   Begin VB.TextBox clieNameTxt 
+      Height          =   270
+      Left            =   1560
+      TabIndex        =   10
+      Text            =   "Client1"
+      Top             =   4680
+      Width           =   1695
+   End
    Begin VB.TextBox txtReceive 
       Height          =   1935
-      Left            =   1200
+      Left            =   1320
       MultiLine       =   -1  'True
       TabIndex        =   8
-      Text            =   "Client.frx":0000
-      Top             =   3120
-      Width           =   6855
+      Top             =   2640
+      Width           =   6735
    End
    Begin VB.TextBox txtSend 
       Height          =   1935
-      Left            =   1200
+      Left            =   1320
       MultiLine       =   -1  'True
       TabIndex        =   6
-      Text            =   "Client.frx":0006
-      Top             =   1080
-      Width           =   6855
+      Top             =   600
+      Width           =   6735
    End
    Begin MSWinsockLib.Winsock Winsock_Client 
       Left            =   7680
@@ -67,20 +73,28 @@ Begin VB.Form Client
       Top             =   120
       Width           =   1215
    End
+   Begin VB.Label Label4 
+      Caption         =   "使用者名稱(&N)："
+      Height          =   255
+      Left            =   120
+      TabIndex        =   9
+      Top             =   4680
+      Width           =   1335
+   End
    Begin VB.Label Label3 
-      Caption         =   "接收文字"
+      Caption         =   "接收文字(&T)："
       Height          =   495
       Left            =   120
       TabIndex        =   7
-      Top             =   3120
+      Top             =   2760
       Width           =   1215
    End
    Begin VB.Label Label2 
-      Caption         =   "傳送文字"
+      Caption         =   "傳送文字(&S)："
       Height          =   495
       Left            =   120
       TabIndex        =   5
-      Top             =   1080
+      Top             =   600
       Width           =   1215
    End
    Begin VB.Label Label1 
@@ -157,7 +171,8 @@ End Sub
 
 Private Sub txtSend_Change()
 'On Error GoTo error_Proc
-Winsock_Client.SendData txtSend.Text
+txt = clieNameTxt.Text & "  " & Time & ":"
+Winsock_Client.SendData txt & txtSend.Text
 '(待增：錯誤處理)
 'error_Proc:
     'MsgBox "錯誤！可能尚未連線，請檢察錯誤訊息" & vbNewLine & "詳細資訊：" & vbNewLine & Err.Description, vbCritical

@@ -5,40 +5,71 @@ Begin VB.Form Server
    ClientHeight    =   5235
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   9240
+   ClientWidth     =   6255
    LinkTopic       =   "Form1"
    ScaleHeight     =   5235
-   ScaleWidth      =   9240
+   ScaleWidth      =   6255
    StartUpPosition =   3  '系統預設值
+   Begin VB.TextBox servNameTxt 
+      Height          =   270
+      Left            =   1560
+      TabIndex        =   8
+      Top             =   4560
+      Width           =   1695
+   End
    Begin VB.Timer Timer1 
       Interval        =   50
-      Left            =   8760
+      Left            =   5760
       Top             =   0
    End
    Begin VB.TextBox txtSend 
-      Height          =   1935
-      Left            =   2760
+      Height          =   1815
+      Left            =   1320
       MultiLine       =   -1  'True
       TabIndex        =   1
-      Text            =   "Server.frx":0000
-      Top             =   480
-      Width           =   6375
+      Top             =   600
+      Width           =   4815
    End
    Begin VB.TextBox txtReceive 
       Height          =   1935
-      Left            =   2760
+      Left            =   1320
       MultiLine       =   -1  'True
       TabIndex        =   0
-      Text            =   "Server.frx":0006
       Top             =   2520
-      Width           =   6375
+      Width           =   4815
    End
    Begin MSWinsockLib.Winsock Winsock_Server 
-      Left            =   8760
+      Left            =   5760
       Top             =   4680
       _ExtentX        =   741
       _ExtentY        =   741
       _Version        =   393216
+   End
+   Begin VB.Label Label5 
+      Caption         =   "伺服器名稱(&N)："
+      Height          =   255
+      Left            =   120
+      TabIndex        =   7
+      Top             =   4560
+      Width           =   1335
+   End
+   Begin VB.Label Label4 
+      BorderStyle     =   1  '單線固定
+      Caption         =   "Label4"
+      Height          =   255
+      Left            =   1080
+      TabIndex        =   6
+      ToolTipText     =   "請在對端電腦輸入此IP位址"
+      Top             =   4920
+      Width           =   2175
+   End
+   Begin VB.Label Label1 
+      Caption         =   "此電腦IP："
+      Height          =   255
+      Left            =   120
+      TabIndex        =   5
+      Top             =   4920
+      Width           =   1215
    End
    Begin VB.Label Label3 
       Caption         =   "接收文字"
@@ -49,8 +80,8 @@ Begin VB.Form Server
       Width           =   1215
    End
    Begin VB.Label Label2 
-      Caption         =   "傳送文字"
-      Height          =   495
+      Caption         =   "傳送文字(&S)："
+      Height          =   255
       Left            =   120
       TabIndex        =   3
       Top             =   600
@@ -89,6 +120,8 @@ Me.Left = Screen.Width / 5
 lblState = "等待連線……"
 txtReceive.Text = Empty
 txtSend.Enabled = False                 '等待連線
+Label4.Caption = getIP()
+servNameTxt.Text = Label4.Caption
 End Sub
 '=====================================================================
 
@@ -117,7 +150,9 @@ If Winsock_Server.State = sckListening Then     '監聽中：無用戶端連線
     Call Winsock_Server_Error(vbError, "用戶端未連線!", vbError, Source, HelpFile, HelpContext, False)
     Exit Sub
 End If
-Winsock_Server.SendData txtSend.Text
+Dim txt As String
+txt = servNameTxt.Text & "  " & Time & ":"
+Winsock_Server.SendData txt & txtSend.Text
 End Sub
 
 '=====================================================================
@@ -148,4 +183,24 @@ s = s & "Scode：" & Scode & vbNewLine
 s = s & "錯誤來源：" & Source & vbNewLine
 MsgBox s
 End Sub
+
+Public Function getIP()
+
+Dim WMI     As Object
+Dim qryWMI  As Object
+Dim Item    As Variant
+
+    Set WMI = GetObject("winmgmts:\\.\root\cimv2")
+
+    Set qryWMI = WMI.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfiguration " & _
+                               "WHERE IPEnabled = True")
+
+    For Each Item In qryWMI
+      getIP = Item.IPAddress(0)
+    Next
+
+    Set WMI = Nothing
+    Set qryWMI = Nothing
+
+End Function
 
