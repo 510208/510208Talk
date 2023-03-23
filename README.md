@@ -2,4 +2,4 @@
 
 # 510208Talk
 
-## 軟體介紹說明文件：[點我前往](https://www.notion.so/510208Talk-fd69e221040c448c8f79405ad65788c9?pvs=4)
+## 軟體介紹說明文件：[點我前往](https://510208.notion.site/510208Talk-fd69e221040c448c8f79405ad65788c9)
